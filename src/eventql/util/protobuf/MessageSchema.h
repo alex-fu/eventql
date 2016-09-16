@@ -140,6 +140,8 @@ protected:
       const String& prefix,
       Set<String>* columns);
 
+  void fieldsToJSON(json::JSONOutputStream* json) const;
+
   String name_;
   Vector<MessageSchemaField> fields_;
   HashMap<String, uint32_t> field_ids_;

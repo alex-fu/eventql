@@ -370,6 +370,12 @@ void MessageSchema::toJSON(json::JSONOutputStream* json) const {
   json->addString(name_);
   json->addComma();
 
+  fieldsToJSON(json);
+
+  json->endObject();
+}
+
+void MessageSchema::fieldsToJSON(json::JSONOutputStream* json) const {
   json->addObjectEntry("columns");
   json->beginArray();
 
@@ -411,16 +417,15 @@ void MessageSchema::toJSON(json::JSONOutputStream* json) const {
 
     if (field.type == FieldType::OBJECT) {
       json->addComma();
-      json->addObjectEntry("schema");
-      field.schema->toJSON(json);
+      field.schema->fieldsToJSON(json);
     }
 
     json->endObject();
   }
 
   json->endArray();
-  json->endObject();
 }
+
 
 void MessageSchema::fromJSON(
     json::JSONObject::const_iterator begin,

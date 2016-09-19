@@ -216,6 +216,15 @@ int main(int argc, const char** argv) {
       "<batch mode>");
 
   flags.defineFlag(
+      "web",
+      cli::FlagParser::T_SWITCH,
+      false,
+      NULL,
+      NULL,
+      "web",
+      "<web mode>");
+
+  flags.defineFlag(
       "quiet",
       cli::FlagParser::T_SWITCH,
       false,
@@ -264,6 +273,7 @@ int main(int argc, const char** argv) {
         "   -c, --config <file>       Load config from file\n"
         "   -C name=value             Define a config value on the command line\n"
         "   -B, --batch               Run in batch mode (streaming result output)\n"
+        "   --web                     Start the webinterface\n"
         "   -q, --quiet               Be quiet (disables query progress)\n"
         "   --verbose                 Print debug output to STDERR\n"
         "   -v, --version             Display the version of this binary and exit\n"
@@ -408,6 +418,8 @@ int main(int argc, const char** argv) {
         goto exit;
       }
     }
+  } else if (flags.isSet("web")) {
+    iputs("start web interface", 1);
   } else {
     console.startInteractiveShell();
   }

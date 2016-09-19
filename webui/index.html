@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>EventQL - Console</title>
+    <meta name="description" content="EventQL Console." />
+        <meta content="text/html; charset=utf-8" http-equiv="Content-type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" sizes="64x64" href="/assets/favicon.png">
+    <link rel="stylesheet" type="text/css" href="common.css" />
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
+    <link rel="alternate" type="application/rss+xml" title="RSS Feed" href="/blog/feed.xml">
+  </head>
+
+  <body>
+    <div id="evql">
+      <nav id="navigation" class="shadow">
+        <div class="page_wrap">
+          <a href="/" class="logo">EventQL</a>
+          <div class="menu_toggler" onclick="document.querySelector('.menu_container').classList.toggle('visible');"><i></i><i></i><i></i></div>
+          <div class="menu_container">
+            <a class="menu" href="/">Console</a>
+          </div>
+          <div >
+            Clear Console
+          </div>
+        </div>
+      </nav>
+
+      <section class="evql_console">
+        <div class="console"></div>
+        <div class="prompt">
+          <span>evql&gt;</span>
+          <textarea rows=1 spellcheck="false"></textarea>
+          <span class="hint">Press 'Enter' to execute<span>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>
+

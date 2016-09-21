@@ -23,26 +23,35 @@
  */
 #pragma once
 #include <eventql/util/stdtypes.h>
-#include <eventql/util/option.h>
-
-namespace csql {
-
+#include <eventql/util/autoref.h>
+#include <eventql/db/file_tracker.h>
+#include <eventql/config/config_directory.h>
 #include "eventql/eventql.h"
+#include <thread>
+#include <condition_variable>
 
-struct ColumnInfo {
-  String column_name;
-  String type;
-  bool is_nullable;
-  size_t type_size;
-  bool is_primary_key;
-  std::string encoding;
+namespace eventql {
+struct DatabaseContext;
+
+class Monitor {
+public:
+
+  Monitor(DatabaseContext* dbctx);
+  ~Monitor();
+
+  ReturnCode runMonitorProcedure();
+
+  void startMonitorThread();
+  void stopMonitorThread();
+
+protected:
+
+  DatabaseContext* dbctx_;
+  std::thread thread_;
+  bool thread_running_;
+  std::mutex mutex_;
+  std::condition_variable cv_;
 };
 
-struct TableInfo {
-  String table_name;
-  Option<String> description;
-  Vector<ColumnInfo> columns;
-  Set<String> tags;
-};
+} // namespace eventql
 
-} // namespace csql

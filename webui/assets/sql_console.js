@@ -24,6 +24,7 @@
  */
 
 EvqlConsole = function(elem, params) {
+  var api_url = "api/v1/sql?format=json_sse&query=";
   var query_mgr = EventSourceHandler();
   var history = [];
 
@@ -190,10 +191,10 @@ EvqlConsole = function(elem, params) {
 
     query_elem = appendConsoleEntry(query_elem);
 
+    var ev = new zEventSource(api_url + encodeURIComponent(query_string));
+
     var query_id = Math.random().toString(36);
-    var query = query_mgr.add(
-      query_id,
-      ZFE.api_stubs.z1.executeSQLSSE(query_string));
+    var query = query_mgr.add(query_id, ev);
 
     query.addEventListener('result', function(e) {
       query_mgr.close(query_id);

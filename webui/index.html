@@ -14,20 +14,12 @@
 
   <body>
     <div id="evql">
-      <nav id="navigation" class="shadow">
-        <div class="page_wrap">
-          <a href="/" class="logo">EventQL</a>
-          <div class="menu_toggler" onclick="document.querySelector('.menu_container').classList.toggle('visible');"><i></i><i></i><i></i></div>
-          <div class="menu_container">
-            <a class="menu" href="/">Console</a>
-          </div>
-          <div >
-            Clear Console
-          </div>
-        </div>
-      </nav>
-
       <section class="evql_console">
+        <div class="toolbar">
+          <button class="clear">
+            Clear Console
+          </button>
+        </div>
         <div class="console"></div>
         <div class="prompt">
           <span>evql&gt;</span>
@@ -36,6 +28,14 @@
         </div>
       </section>
     </div>
+
+    <script type="text/javascript" src="event_source_handler.js"></script>
+    <script type="text/javascript" src="z-dom_util.js"></script>
+    <script type="text/javascript" src="sql_console.js"></script>
+    <script type="text/javascript">
+      var evql_console = new EvqlConsole(document.getElementById("evql"));
+      evql_console.initialize();
+    </script>
   </body>
 </html>
 

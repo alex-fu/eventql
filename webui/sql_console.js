@@ -1,14 +1,36 @@
-ZFE.views["io.zscale.zfe.sql_console"] = function(elem, params) {
+/**
+ * Copyright (c) 2016 DeepCortex GmbH <legal@eventql.io>
+ * Authors:
+ *   - Laura Schlimmer <laura@eventql.io>
+ *   - Paul Asmuth <paul@eventql.io>
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Affero General Public License ("the license") as
+ * published by the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * In accordance with Section 7(e) of the license, the licensing of the Program
+ * under the license does not imply a trademark license. Therefore any rights,
+ * title and interest in our trademarks remain entirely with us.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the license for more details.
+ *
+ * You can be released from the requirements of the license by purchasing a
+ * commercial license. Buying such a license is mandatory as soon as you develop
+ * commercial activities involving this program without disclosing the source
+ * code of your own applications
+ */
+
+EvqlConsole = function(elem, params) {
   var query_mgr = EventSourceHandler();
   var history = [];
 
-  this.initialize = function(params) {
-    var page = zTemplateUtil.getTemplate("zscale_sql_console_main_tpl");
+  this.initialize = function() {
 
     //init clear console
-    zDomUtil.onClick(page.querySelector("button.clear"), clearConsole);
-    zDomUtil.handleLinks(page, ZFE.navigateTo);
-    elem.appendChild(page);
+    zDomUtil.onClick(elem.querySelector("button.clear"), clearConsole);
 
     initPrompt();
     displayBanner();
@@ -155,13 +177,18 @@ ZFE.views["io.zscale.zfe.sql_console"] = function(elem, params) {
   };
 
   var executeQuery = function(query_string) {
-    var query_elem = zTemplateUtil.getTemplate("zscale_sql_console_query_tpl");
-    query_elem.querySelector(".cmd").innerHTML =
-        "zsql&gt; " + zDomUtil.escapeHTML(query_string);
+    var query_elem = document.createElement("div");
+    var cmd_elem = document.createElement("p");
+    cmd_elem.className = "cmd";
+    cmd_elem.innerHTML = "evql&gt; " + zDomUtil.escapeHTML(query_string);
+    query_elem.appendChild(cmd_elem);
+
+    var status_elem = document.createElement("p");
+    status_elem.className = "status";
+    status_elem.innerHTML = "Waiting...";
+    query_elem.appendChild(status_elem);
 
     query_elem = appendConsoleEntry(query_elem);
-
-    var status_elem = query_elem.querySelector(".status");
 
     var query_id = Math.random().toString(36);
     var query = query_mgr.add(
@@ -236,22 +263,22 @@ ZFE.views["io.zscale.zfe.sql_console"] = function(elem, params) {
   }
 
   var fetchHistory = function() {
-    params.app.api_stubs.workspace.fetchConsoleHistory({
-      project_id: params.project_id
-    }, function(r) {
-      if (r.success) {
-        history = r.result.history.reverse();
-      } else {
-        var errmsg = document.createElement("div");
-        var errmsg_p = document.createElement("p");
-        errmsg.appendChild(errmsg_p);
-        errmsg_p.innerHTML = "Unable to fetch history &mdash; old entries will not be available";
-        errmsg_p.classList.add("warn");
-        appendConsoleEntry(errmsg);
-      }
+   // params.app.api_stubs.workspace.fetchConsoleHistory({
+   //   project_id: params.project_id
+   // }, function(r) {
+   //   if (r.success) {
+   //     history = r.result.history.reverse();
+   //   } else {
+   //     var errmsg = document.createElement("div");
+   //     var errmsg_p = document.createElement("p");
+   //     errmsg.appendChild(errmsg_p);
+   //     errmsg_p.innerHTML = "Unable to fetch history &mdash; old entries will not be available";
+   //     errmsg_p.classList.add("warn");
+   //     appendConsoleEntry(errmsg);
+   //   }
 
-      elem.querySelector(".loader").classList.add("hidden");
-    });
+   //   elem.querySelector(".loader").classList.add("hidden");
+   // });
   };
 
   var clearConsole = function() {
@@ -262,11 +289,12 @@ ZFE.views["io.zscale.zfe.sql_console"] = function(elem, params) {
   };
 
   var displayBanner = function() {
-    var user_str = params.user_info.user_name + " <" + params.user_info.user_id + ">";
+    //FIXME version. user string
+    //var user_str = params.user_info.user_name + " <" + params.user_info.user_id + ">";
     var banner = document.createElement("div");
     var banner_p = document.createElement("p");
     banner.appendChild(banner_p);
-    banner_p.innerHTML = ">> zsql v0.2.3 &mdash; logged in as " + zDomUtil.escapeHTML(user_str);
+    banner_p.innerHTML = ">> evql v0.2.3 ";//&mdash; logged in as " + zDomUtil.escapeHTML(user_str);
     banner_p.classList.add("banner");
     appendConsoleEntry(banner);
   };

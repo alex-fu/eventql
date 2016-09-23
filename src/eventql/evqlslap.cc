@@ -153,9 +153,11 @@ int main(int argc, const char** argv) {
 
   auto num = flags.isSet("num") ? flags.getInt("num") : -1;
   auto on_progress = [&stdout_os, &num](eventql::cli::BenchmarkStats* stats) {
+    UnixTime now;
     fprintf(
         stdout,
-        "\rRunning... rate=%7.4fr/s, avg_runtime=%4.4fms, total=%llu",
+        "\r%s Running... rate=%7.4fr/s, avg_runtime=%4.4fms, total=%llu",
+        now.toString().c_str(),
         stats->getRollingRPS(),
         stats->getRollingAverageRuntime() / double(kMicrosPerMilli),
         stats->getTotalRequestCount());

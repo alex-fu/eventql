@@ -156,7 +156,7 @@ int main(int argc, const char** argv) {
     UnixTime now;
     fprintf(
         stdout,
-        "\r%s Running... rate=%7.4fr/s, avg_runtime=%4.4fms, total=%llu",
+        "\r%s [evqlslap] Running... rate=%7.4fr/s, avg_runtime=%4.4fms, total=%llu",
         now.toString().c_str(),
         stats->getRollingRPS(),
         stats->getRollingAverageRuntime() / double(kMicrosPerMilli),
@@ -191,6 +191,12 @@ int main(int argc, const char** argv) {
       flags.getString("host"),
       flags.getInt("port"),
       {});
+
+  UnixTime now;
+  std::cout <<
+      now.toString().c_str() <<
+      " [evqlslap] Starting benchmark" <<
+      std::endl;
 
   if (rc.isSuccess()) {
     rc = benchmark.run();

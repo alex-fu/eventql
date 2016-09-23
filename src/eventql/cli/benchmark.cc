@@ -89,6 +89,8 @@ ReturnCode Benchmark::run() {
     return ReturnCode::error("ERUNTIME", "no request handler set");
   }
 
+  stats_.setStartTime(MonotonicClock::now());
+
   for (size_t i = 0; i < num_threads_; ++i) {
     threads_[i] = std::thread(std::bind(&Benchmark::runThread, this, i));
     ++threads_running_;
@@ -199,7 +201,12 @@ bool Benchmark::getRequestSlot(size_t idx) {
 BenchmarkStats::BenchmarkStats() :
     total_request_count_(0),
     running_request_count_(0),
-    total_error_count_(0) {}
+    total_error_count_(0),
+    start_time_(0) {}
+
+void BenchmarkStats::setStartTime(uint64_t start_time) {
+  start_time_ = start_time;
+}
 
 void BenchmarkStats::addRequestStart() {
   std::unique_lock<std::mutex> lk(mutex_);
@@ -237,6 +244,11 @@ double BenchmarkStats::getRollingAverageRuntime() const {
   rolling_avg_runtime_.computeAggregate(&value, &count, &interval_us);
 
   return double(value) / double(count);
+}
+
+uint64_t BenchmarkStats::getTotalRuntime() const {
+  auto now = MonotonicClock::now();
+  return now - start_time_;
 }
 
 uint64_t BenchmarkStats::getTotalRequestCount() const {

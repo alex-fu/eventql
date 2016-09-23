@@ -38,11 +38,14 @@ public:
 
   BenchmarkStats();
 
+  void setStartTime(uint64_t start_time);
+
   void addRequestStart();
   void addRequestComplete(bool is_success, uint64_t runtime_us);
 
   double getRollingRPS() const;
   double getRollingAverageRuntime() const;
+  uint64_t getTotalRuntime() const;
   uint64_t getTotalRequestCount() const;
   uint64_t getRunningRequestCount() const;
   uint64_t getTotalErrorCount() const;
@@ -55,6 +58,7 @@ protected:
   uint64_t total_request_count_;
   uint64_t running_request_count_;
   uint64_t total_error_count_;
+  uint64_t start_time_;
   mutable std::mutex mutex_;
 };
 

@@ -192,18 +192,34 @@ int main(int argc, const char** argv) {
       flags.getInt("port"),
       {});
 
-  UnixTime now;
-  std::cout <<
-      now.toString().c_str() <<
-      " [evqlslap] Starting benchmark" <<
-      std::endl;
+  {
+    UnixTime now;
+    std::cout <<
+        now.toString().c_str() <<
+        " [evqlslap] Starting benchmark" <<
+        std::endl;
+  }
 
   if (rc.isSuccess()) {
     rc = benchmark.run();
   }
 
   if (rc.isSuccess()) {
-    std::cout << "\nsuccess" << std::endl;
+    auto stats = benchmark.getStats();
+    double total_runtime = double(stats->getTotalRuntime()) / double(kMicrosPerSecond);
+    UnixTime now;
+    fprintf(
+        stdout,
+        "\r%s [evqlslap] Done. rate=%7.4fr/s, total_runtime=%.4fs, "
+        "avg_runtime=%4.4fs, total=%llu, errors=%llu (%2.3f%%)\n",
+        now.toString().c_str(),
+        double(stats->getTotalRequestCount()) / total_runtime,
+        total_runtime,
+        double(total_runtime) / double(stats->getTotalRequestCount()),
+        stats->getTotalRequestCount(),
+        stats->getTotalErrorCount(),
+        stats->getTotalErrorRate());
+
     return 0;
   } else {
     std::cerr << "ERROR: " << rc.getMessage() << std::endl;

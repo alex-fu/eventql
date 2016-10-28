@@ -27,6 +27,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <vector>
+#include <string>
 
 // FIXPAUL too many copies T val...
 namespace util {
